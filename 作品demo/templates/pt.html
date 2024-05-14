@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>文件夹上传</title>
+     <link rel="stylesheet" href="../static/plugins/bootstrap-3.4.1/css/bootstrap.css">
+    <style>
+        #download{
+        background-color: green; /* 可用时的背景色 */
+        color: white; /* 文本颜色 */
+        cursor: pointer; /* 鼠标悬停时显示小手图标 */
+        }
+
+        /* disabled状态下的按钮颜色 */
+        #download[disabled] {
+        background-color: grey; /* 禁用时的背景色 */
+        color: lightgrey; /* 文本颜色 */
+        cursor: not-allowed; /* 鼠标悬停时显示禁止图标 */
+        }
+    </style>
+</head>
+<body>
+<p>文件夹上传的目标检测</p>
+<input type='file' id="fileFolder"  multiple webkitdirectory >
+<div>上传文件预览</div>
+<ul id="display0" style="height:150px;width:300px;overflow:auto;background:#EEEEEE;"></ul>
+<div>上传文件预览</div>
+<ul id="display1" style="height:150px;width:300px;overflow:auto;background:#EEEEEE;"></ul>
+<p>以下是文件上传操作结果</p>
+<div id="upload"></div>
+<p>以下是模型训练状态</p>
+<div id="run"></div>
+<p>以下是模型下载的按钮</p>
+<div id="result">
+    <p id="result_text"></p>
+<button id="download" taskId="" disabled>点击下载模型文件啦</button>
+    <a id="result_link"></a>
+</div>
+</body>
+<script src="../static/jquery-3.7.1.min.js"></script>
+<script src="../static/plugins/bootstrap-3.4.1/js/bootstrap.js"></script>
+<script>
+     $('#fileFolder').change(function(e){
+         var formdata=new FormData();
+         var image0=0;
+         var image1=0;
+         var label0=0;
+         var label1=0;
+         const display=$('#display0');
+         const display1=$('#display1');
+         const upload=$('#upload');
+
+         const run=$('#run');
+         const result_text=$('#result_text');
+         const result_link=$('#result_link');
+
+         $('#download').prop('disabled',true);
+         display.empty();
+         display1.empty();
+         run.empty();
+         upload.text('');
+         result_text.text('');
+         result_link.removeAttr('href');
+        // 移除download属性
+         result_link.removeAttr('download');
+        // 设置a标签的文本内容为空字符串（这实际上会移除之前的文本内容）
+         result_link.text('等待下载链接');
+         var files = e.target.files;
+        for(var i=0;i<files.length;i++){
+        var path=files[i].webkitRelativePath;
+        console.log(files[i])
+        var li = $('<li></li>');
+        li.text(path);
+        display.append(li);
+        var arr=path.split('/');
+        console.log(arr);
+            if(files[i].type.match('image.*')){
+                 if(arr[2]==='train'){
+                    image0+=1;
+                    formdata.append("image_train[]",files[i]);
+                }
+                else if(arr[2]==='val'){
+                image1+=1;
+                 formdata.append("image_val[]",files[i]);
+                }
+
+            }
+            else if(files[i].type==='text/plain'){
+                if(arr[2]==='train'){
+                label0+=1;
+                 formdata.append("label_train[]",files[i]);
+                }
+                else if(arr[2]==='val'){
+                label1+=1;
+                 formdata.append("label_val[]",files[i]);
+                }
+            }
+
+        }
+        console.log(image0);
+        console.log(image1);
+        console.log(label0);
+        console.log(label1);
+
+        var li0 = $('<li></li>');
+        li0.text('train_image'+image0);
+        display1.append(li0);
+        var li1 = $('<li></li>');
+        li1.text('val_image'+image1);
+        display1.append(li1);
+        var li2 = $('<li></li>');
+        li2.text('train_label'+label0);
+        display1.append(li2);
+        var li3 = $('<li></li>');
+        li3.text('val_label'+label1);
+        display1.append(li3);
+        if((image0)&&(image1)&&(label0===image0)&&(label1===image1)){
+            $.ajax({
+                url:'/pt',
+                type:'POST',
+                data:formdata,
+                async:true,
+                processData:false,
+                contentType:false,
+                success:function (response){
+                    upload.text('文件上传已经成功，您的训练序号是'+response.taskID)
+                    startPollingForResult(response.taskID)
+                },
+                error:function (xhr,status,error){
+                     upload.text("文件上传有误！请检查后重新操作！")
+                    alert("文件上传有误！请检查后重新操作！")
+                }
+            })
+        }
+        else{
+            alert('您上传的文件可能存在错误！无法进行模型训练！请保证images和labels两个文件夹内相应层次的图片和标签数目相等！并注意文件层次是否符合标准！');
+        }
+     })
+function startPollingForResult(taskId) {
+    var intervalId = setInterval(function() {
+        $.get('/check_task_status', { taskId: taskId }, function(response) {
+            if (response.status === 'completed') {
+                // 结果已准备好，停止轮询并处理结果
+                setTimeout(function() {
+                     clearInterval(intervalId);
+                     $('#run').text('训练成功！');
+                     $('#download').prop('disabled',false);
+                     $('#download').data('taskId',taskId);
+                }, 30000); // 等待5秒后下载
+
+            } else if (response.status === 'running') {
+                $('#run').text('模型正在训练中，请耐心等待')
+                // 结果还没准备好，继续轮询
+            } else {
+                $('#run').text('本次模型训练失败，请检查模型训练的图片和标签是否存在问题')
+                clearInterval(intervalId);
+            }
+        });
+    }, 10000); // 每15秒轮询一次
+}
+$('#download').on('click',function (){
+    console.log('按钮可以可以可以可以被点击！！');
+
+    const a_down = $('#result_link');
+    // 设置a标签的href属性
+    taskId=$('#download').data('taskId')
+    console.log(taskId);
+    a_down.attr('href', '/download_folder/' + taskId);
+    // 设置a标签的文本内容（这里假设我们想要文本为"下载模型"）
+    a_down.text('下载模型');
+    a_down.attr('download', 'model.zip'); // 假设模型文件名是model.zip
+    // 如果需要，给a标签添加下载属性（如果需要强制下载而不是打开链接）
+})
+</script>
+</html>

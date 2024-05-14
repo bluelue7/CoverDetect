@@ -1,0 +1,13 @@
+  
+    # dataset path  
+    path: data9  
+    train: images/train  
+    val: images/val  
+    # test: datasets/data9/images/test  
+
+    # number of classes  
+    nc: 5  
+
+    # class names (as a Python list string representation)  
+    names: ['good', 'broke', 'lose', 'uncovered', 'circle']  
+    

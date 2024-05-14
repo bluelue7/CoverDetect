@@ -1,0 +1,226 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>井盖识别</title>
+<link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet" type="text/css">
+<link href="{{ url_for('static', filename='style_.css') }}" rel="stylesheet" type="text/css">
+<link href="{{ url_for('static', filename='material-icons.css') }}" rel="stylesheet">
+<script src="{{ url_for('static', filename='jquery-3.7.1.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='loading_.js') }}"></script>
+  <script src="{{ url_for('static', filename='UploadPic.js') }}"></script>
+  <link rel="icon" href='../static/cover.jpeg'>
+</head>
+<style>
+    input[type='file'] {
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	position: absolute;
+	right: 0;
+	top: 0;
+	opacity: 0;
+	cursor: pointer;
+}
+</style>
+<body>
+  <div class="container">
+    <aside>
+      <div class="top">
+        <div class="logo">
+          <h1><span class="title">井盖识别</span></h1>
+        </div>
+        <div class="close" id="close-btn">
+          <span class="material-icons-sharp">close</span>
+        </div>
+      </div>
+      <div class="sidebar">
+        <a href="#" class="active">
+          <span class="material-icons-sharp">inventory</span>
+          <h3>开始检测</h3>
+        </a>
+        <a href="detections.html">
+          <span class="material-icons-sharp">grid_view</span>
+          <h3>批量检测</h3>
+        </a>
+        <a href="analysis.html" id="analysis">
+          <span class="material-icons-sharp">insights</span>
+          <h3>检测结果分析</h3>
+        </a>
+        <a href="intro.html">
+          <span class="material-icons-sharp">mail_outline</span>
+          <h3>网站使用说明</h3>
+          <span class="message-count" style="font-size:50%">click me</span>
+        </a>
+        <a href="set_up.html" id="set_up">
+          <span class="material-icons-sharp">settings</span>
+          <h3>设置</h3>
+        </a>
+        <a href="user.html">
+          <span class="material-icons-sharp">person_outline</span>
+          <h3>用户</h3>
+        </a>
+        <a href="#">
+          <span class="material-icons-sharp">inventory</span>
+          <h3>项目</h3>
+        </a>
+        <a href="#">
+          <span class="material-icons-sharp">report_gmailerrorred</span>
+          <h3>报告</h3>
+        </a>
+        <a href="#">
+          <span class="material-icons-sharp">add</span>
+          <h3>添加项目</h3>
+          </h3>
+        </a>
+        <a href="choose.html">
+          <span class="material-icons-sharp">logout</span>
+          <h3>退出登陆</h3>
+        </a>
+      </div>
+    </aside>
+    <main>
+      <h1>请选择文件后点击开始检测</h1>
+      <div class="date">
+        <input type="date">
+      </div>
+      <div class="insights">
+        <p>
+        <div class="pic1">
+          <span class="material-icons-sharp">bar_chart</span>
+          <div class="left">
+              <h1 class="primary">图片预览</h1>
+          </div>
+          <div class="middle">
+            <div id="Pic">
+              <div id="UploadPic" Col="1" Row="1" Width="800" Height="800" ></div>
+            </div>
+          </div>
+        </div>
+        </p>
+        <!-- End of pic1 -->
+
+        <p>
+        <div class="glow-animation" id="loading_btn">
+          <div class="primary">开始检测</div>
+        </div>
+        </p>
+
+        <p>
+        <div class="pic2">
+          <span class="material-icons-sharp">stacked_line_chart</span>
+          <div class="left">
+              <h1 class="danger">检测结果展示</h1>
+          </div>
+          <div class="middle">
+            <div id="Pic">
+              <div id="result">
+                <div class="lay-loader" id="loading">
+                  <div class="lay-loader-inner"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End of pic2 -->
+        </p>
+
+
+        <p>
+        <div class="item add-product" onclick="location.href='detections.html';">
+          <div>
+            <span class="material-icons-sharp">add</span>
+            <h3>上传更多</h3>
+          </div>
+        </div>
+        </p>
+
+
+      </div>
+
+      <!-- End of insights -->
+    </main>
+    <!-- End of main -->
+    <div class="right">
+      <div class="top">
+        <button id="menu-btn">
+          <span class="material-icons-sharp">menu</span>
+        </button>
+        <div class="theme-toggler">
+          <span class="material-icons-sharp active">light_mode</span>
+          <span class="material-icons-sharp">dark_mode</span>
+        </div>
+        <div class="profile">
+          <div class="info">
+              <P><b>welcome</b> to</P>
+            <small class="text-muted">our platform</small>
+          </div>
+          <div class="profile-photo">
+              <img src="../static/favicon.ico.jpeg">
+          </div>
+        </div>
+      </div>
+      <!-- End of top -->
+
+
+        <div class="analytics">
+        <h2>检测结果分析</h2>
+        <div class="item online">
+          <div class="icon">
+            <span class="material-icons-sharp">report_gmailerrorred</span>
+          </div>
+          <div class="middle">
+            <div class="info">
+              <h2>种类</h2>
+            </div>
+          </div>
+          <div class="danger">
+             <h3 class="type"></h3>
+          </div>
+        </div>
+
+        <div class="item offline">
+          <div class="icon">
+            <span class="material-icons-sharp">receipt_long</span>
+          </div>
+          <div class="middle">
+            <div class="info">
+              <h2>坐标信息</h2>
+            </div>
+               <h3 class="coordinates">
+               </h3>
+          </div>
+        </div>
+
+        <div class="item customers">
+          <div class="icon">
+            <span class="material-icons-sharp">analytics</span>
+          </div>
+          <div class="middle">
+            <div class="info">
+              <h2>置信度</h2>
+            </div>
+              <h3 class="success score"></h3>
+          </div>
+        </div>
+
+
+    </div>
+  </div>
+  <script src="../static/index.js"></script>
+<script>
+  const identity = sessionStorage.getItem("identity");
+  console.log(identity)
+  if (identity === "manager") {
+
+  } else if (identity === "repairman") {
+    document.getElementById("analysis").style.display = "none";
+    document.getElementById("set_up").style.display = "none";
+
+  }
+</script>
+
+</body>
+
+</html>

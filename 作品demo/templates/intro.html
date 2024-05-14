@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+      <title>井盖识别</title>
+<link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet" type="text/css">
+<link href="{{ url_for('static', filename='style_.css') }}" rel="stylesheet" type="text/css">
+<link href="{{ url_for('static', filename='material-icons.css') }}" rel="stylesheet">
+<script src="{{ url_for('static', filename='jquery-3.7.1.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='loading.js') }}"></script>
+  <script src="{{ url_for('static', filename='UploadPics.js') }}"></script>
+      <link rel="icon" href='../static/cover.jpeg'>
+</head>
+<body>
+  <div class="container">
+    <aside>
+      <div class="top">
+        <div class="logo">
+          <h1><span class="title">井盖识别</span></h1>
+        </div>
+        <div class="close" id="close-btn">
+          <span class="material-icons-sharp">close</span>
+        </div>
+      </div>
+      <div class="sidebar">
+        <a href="index.html">
+          <span class="material-icons-sharp">inventory</span>
+          <h3>开始检测</h3>
+        </a>
+        <a href="detections.html">
+          <span class="material-icons-sharp">grid_view</span>
+          <h3>批量检测</h3>
+        </a>
+        <a href="analysis.html" id="analysis">
+          <span class="material-icons-sharp">insights</span>
+          <h3>检测结果分析</h3>
+        </a>
+        <a href="#" class="active">
+          <span class="material-icons-sharp">mail_outline</span>
+          <h3>网站使用说明</h3>
+          <span class="message-count" style="color: white">!</span>
+        </a>
+        <a href="set_up.html" id="set_up">
+          <span class="material-icons-sharp">settings</span>
+          <h3>设置</h3>
+        </a>
+        <a href="user.html">
+          <span class="material-icons-sharp">person_outline</span>
+          <h3>用户</h3>
+        </a>
+        <a href="#">
+          <span class="material-icons-sharp">inventory</span>
+          <h3>项目</h3>
+        </a>
+        <a href="#">
+          <span class="material-icons-sharp">report_gmailerrorred</span>
+          <h3>报告</h3>
+        </a>
+        <a href="#">
+          <span class="material-icons-sharp">add</span>
+          <h3>添加项目</h3>
+          </h3>
+        </a>
+        <a href="choose.html">
+          <span class="material-icons-sharp">logout</span>
+          <h3>退出登陆</h3>
+        </a>
+      </div>
+    </aside>
+    <main>
+      <h1>网站使用说明</h1>
+      <div class="date">
+        <input type="date">
+      </div>
+      <div class="insights">
+          <p>
+            <span class="material-icons-sharp"></span>
+            <div class="middle">
+                <div class="intro" style="height: 100vh;width: 90vh">
+                  <p>
+                     <h1 class="warning" style="text-align: center;padding:10px; ">网站公告</h1>
+                  </p>
+
+                    <h3 class="content" style="font-size: 1.2rem;padding: 0 50px;line-height: 2;">
+                    尊敬的用户们:<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;我们非常高兴地宣布，我们全新的井盖智能检测网站正式上线！现在，我们为井盖维护人员和城市管理者提供了专属的功能，以满足不同用户的需求。
+
+                    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;对于井盖维护人员，我们的网站提供了便捷的功能，<div class="danger" style="display: inline;">包括单张图片上传、批量上传、智能检测和结果展示等</div>。您可以轻松地上传井盖图片，我们的智能检测算法将快速识别井盖的状态，并在图片上标注出检测到的井盖位置。您还可以查看详细的检测结果，包括井盖类别、坐标位置、置信度等信息，帮助您更好地进行井盖维护和修复工作。
+
+                        <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;对于城市管理者，我们的网站提供了更多的功能和统计分析工具。除了可以上传和检测单张与多张井盖图片，系统生成每张图片的标注结果外。<div class="danger" style="display: inline;">我们的网站还会统计各种井盖类型的数量，并以饼图的可视化形式直观展示各类别的数量分布比例，</div>帮助您了解井盖的整体情况并做出相应的决策。
+
+                    此外，<div class="danger" style="display: inline;">我们的网站还支持上传自己训练好的模型文件和标注数据集，并提供了灵活的模型和数据自定义功能</div> 。您可以上传自己的ONNX模型文件，我们将使用该模型文件进行检测。同时，您也可以上传自有的标注数据集，以在线训练定制化的检测模型。
+
+                    <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;我们诚挚地邀请您使用我们的井盖智能检测网站，体验我们为您量身打造的功能和服务。我们致力于提供优质的用户体验，并将持续改进和优化我们的网站功能。
+                    如果您有任何问题或建议，请随时联系我们的客户团队。感谢您选择使用我们的井盖智能检测网站！
+                    <br>
+                        <div class="primary">祝您使用愉快！</div><div class="success">锄禾日当伍队</div>
+                    </h3>
+
+
+                </div>
+            </div>
+          </p>
+
+        <!-- End of intro -->
+
+      </div>
+
+      <!-- End of insights -->
+    </main>
+    <!-- End of main -->
+    <div class="right">
+      <div class="top">
+        <button id="menu-btn">
+          <span class="material-icons-sharp">menu</span>
+        </button>
+        <div class="theme-toggler">
+          <span class="material-icons-sharp active">light_mode</span>
+          <span class="material-icons-sharp">dark_mode</span>
+        </div>
+        <div class="profile">
+          <div class="info">
+              <P><b>welcome</b> to</P>
+            <small class="text-muted">our platform</small>
+          </div>
+          <div class="profile-photo">
+              <img src="../static/favicon.ico.jpeg">
+          </div>
+        </div>
+      </div>
+      <!-- End of top -->
+
+
+    </div>
+  </div>
+  <script src="../static/index.js"></script>
+<script>
+  const identity = sessionStorage.getItem("identity");
+  console.log(identity)
+  if (identity === "manager") {
+    // Show manager content
+  } else if (identity === "repairman") {
+    document.getElementById("analysis").style.display = "none";
+    document.getElementById("set_up").style.display = "none";
+
+  }
+</script>
+</body>
+
+</html>

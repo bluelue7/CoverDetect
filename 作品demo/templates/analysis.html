@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+      <title>井盖识别</title>
+  <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet" type="text/css">
+  <link href="{{ url_for('static', filename='style_.css') }}" rel="stylesheet" type="text/css">
+  <link href="{{ url_for('static', filename='material-icons.css') }}" rel="stylesheet">
+  <script src="{{ url_for('static', filename='jquery-3.7.1.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='echarts.js') }}"></script>
+  <link rel="icon" href='../static/cover.jpeg'>
+</head>
+<style>
+      * {
+    margin: 0;
+    padding: 0;
+  }
+
+  #main {
+    margin: 20px;
+    background-color: rgb(228, 255, 192);
+  }
+</style>
+<body>
+  <div class="container">
+    <aside>
+      <div class="top">
+        <div class="logo">
+          <h1><span class="title">井盖识别</span></h1>
+        </div>
+        <div class="close" id="close-btn">
+          <span class="material-icons-sharp">close</span>
+        </div>
+      </div>
+      <div class="sidebar">
+        <a href="index.html">
+          <span class="material-icons-sharp">inventory</span>
+          <h3>开始检测</h3>
+        </a>
+        <a href="detections.html">
+          <span class="material-icons-sharp">grid_view</span>
+          <h3>批量检测</h3>
+        </a>
+        <a href="#" class="active">
+          <span class="material-icons-sharp">insights</span>
+          <h3>检测结果分析</h3>
+        </a>
+        <a href="intro.html">
+          <span class="material-icons-sharp">mail_outline</span>
+          <h3>网站使用说明</h3>
+          <span class="message-count" style="font-size:50%">click me</span>
+        </a>
+        <a href="set_up.html">
+          <span class="material-icons-sharp">settings</span>
+          <h3>设置</h3>
+        </a>
+        <a href="user.html">
+          <span class="material-icons-sharp">person_outline</span>
+          <h3>用户</h3>
+        </a>
+        <a href="#">
+          <span class="material-icons-sharp">inventory</span>
+          <h3>项目</h3>
+        </a>
+        <a href="#">
+          <span class="material-icons-sharp">report_gmailerrorred</span>
+          <h3>报告</h3>
+        </a>
+        <a href="#">
+          <span class="material-icons-sharp">add</span>
+          <h3>添加项目</h3>
+          </h3>
+        </a>
+        <a href="choose.html">
+          <span class="material-icons-sharp">logout</span>
+          <h3>退出登陆</h3>
+        </a>
+      </div>
+    </aside>
+    <main>
+      <h1>本次检测分析</h1>
+      <div class="date">
+        <input type="date">
+      </div>
+      <div class="insights">
+        <p>
+          <span class="material-icons-sharp"></span>
+          <div class="middle">
+              <div class="pic1-analytics">
+                    <!-- 为 ECharts 准备一个宽为 600px，高为 400px 的 DOM -->
+                  <div id="main" style="width:600px;height:400px;display: none"></div>
+
+              </div>
+              <div class="item add-product" onclick="location.href='detections.html';">
+                  <div>
+                    <span class="material-icons-sharp">add</span>
+                    <h3>去上传照片</h3>
+                  </div>
+              </div>
+
+          </div>
+        <!-- End of pic1 -->
+        </p>
+
+
+      </div>
+
+      <!-- End of insights -->
+    </main>
+    <!-- End of main -->
+    <div class="right">
+      <div class="top">
+        <button id="menu-btn">
+          <span class="material-icons-sharp">menu</span>
+        </button>
+        <div class="theme-toggler">
+          <span class="material-icons-sharp active">light_mode</span>
+          <span class="material-icons-sharp">dark_mode</span>
+        </div>
+        <div class="profile">
+          <div class="info">
+              <P><b>welcome</b> to</P>
+            <small class="text-muted">our platform</small>
+          </div>
+          <div class="profile-photo">
+              <img src="../static/favicon.ico.jpeg">
+          </div>
+        </div>
+      </div>
+      <!-- End of top -->
+
+
+    </div>
+  </div>
+
+
+  <script src="../static/index.js"></script>
+
+<script>
+    var chartDom = document.getElementById("main");
+    // Initialize the ECharts instance using echarts.init(dom)
+    var myChart = echarts.init(document.getElementById('main'));
+    window.addEventListener('resize', function () {
+      myChart.resize();
+    });
+
+    const countMap = JSON.parse(localStorage.getItem("countMap"));
+    console.log(countMap)
+    if (countMap === null) {
+        var h2Element = document.createElement('h2');
+        h2Element.textContent = '请上传照片再分析';
+        h2Element.style.marginTop = "20px";
+        document.body.appendChild(h2Element);
+    } else {
+        chartDom.style.display = 'block';
+        option = {
+        title: {
+          text: '检测结果分析',
+          left: 'center'
+        },
+        tooltip: {
+          trigger: 'item',
+          formatter: '{a} <br/>{b} : {c} ({d}%)'
+        },
+        legend: {
+          orient: 'vertical',
+          left: 'left',
+          data: ['Good', 'Circle', 'Uncovered', 'Lose', 'Broken','Unidentifiable']
+        },
+        series: [
+          {
+            name: '种类个数',
+            type: 'pie',
+            radius: '55%',
+            center: ['50%', '60%'],
+            data: [
+              { value: countMap.good, name: 'Good' },
+              { value: countMap.circle, name: 'Circle' },
+              { value: countMap.uncovered, name: 'Uncovered' },
+              { value: countMap.loss, name: 'Lose' },
+              { value: countMap.broken, name: 'Broken' },
+              { value: countMap.unidentifiable, name: 'Unidentifiable' }
+            ],
+            emphasis: {
+              itemStyle: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: 'rgba(0, 0, 0, 0.5)'
+              }
+            }
+          }
+        ]
+      };
+
+      let currentIndex = -1;
+
+      setInterval(function () {
+        var dataLen = option.series[0].data.length;
+        // 取消之前高亮的图形
+        myChart.dispatchAction({
+          type: 'downplay',
+          seriesIndex: 0,
+          dataIndex: currentIndex
+        });
+        currentIndex = (currentIndex + 1) % dataLen;
+        // 高亮当前图形
+        myChart.dispatchAction({
+          type: 'highlight',
+          seriesIndex: 0,
+          dataIndex: currentIndex
+        });
+        // 显示 tooltip
+        myChart.dispatchAction({
+          type: 'showTip',
+          seriesIndex: 0,
+          dataIndex: currentIndex
+        });
+      }, 1000);
+      // 将配置项设置给 echarts 实例对象。
+      myChart.setOption(option);
+    }
+
+
+
+</script>
+</body>
+
+</html>
